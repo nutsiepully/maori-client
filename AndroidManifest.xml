@@ -12,21 +12,8 @@
             </intent-filter>
         </activity>
 
-        <!--<activity android:name="io.pulkit.ubicomp.AMLTestApp.Settings"-->
-                  <!--android:label="@string/app_name"-->
-                  <!--android:exported="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
-        <!--<service android:exported="true" android:name="Plugin" android:label="AML Test App"></service>-->
-
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="com.aware.READ_CONTEXT_DATA"/>
-    <uses-permission android:name="com.aware.WRITE_CONTEXT_DATA"/>
 
 </manifest>

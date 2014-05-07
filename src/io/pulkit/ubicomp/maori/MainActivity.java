@@ -27,13 +27,16 @@ public class MainActivity extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+    }
 
+    public void evaluateLocalModel() {
         HttpClient httpClient = new DefaultHttpClient();
         String result;
         System.out.println("LOG_CHK: Fetching model from server.");
         try {
             result = httpClient.execute(
-                    new HttpGet("http://128.237.216.135:9979/ml_server/model/get?modelId=naive-bayes-model.model"), new BasicResponseHandler());
+                    new HttpGet("http://128.237.200.224:9979/maori-server/model/get?modelId=naive-bayes-model.model"), new BasicResponseHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
