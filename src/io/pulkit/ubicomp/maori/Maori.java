@@ -28,7 +28,7 @@ public class Maori {
         try {
             // TODO: extract IP to configuration.
             result = httpClient.execute(new HttpGet(
-                            "http://128.237.200.224:9979/maori-server/model/get?modelId=naive-bayes-model.model"),
+                            "http://128.237.200.224:9979/maori-server/model/get?modelId=" + modelName),
                     new BasicResponseHandler());
         } catch (IOException e) {
             throw new RuntimeException(e);

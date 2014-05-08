@@ -14,6 +14,7 @@ import java.io.ObjectInputStream;
 import java.io.StringBufferInputStream;
 import java.util.Date;
 
+import weka.classifiers.AbstractClassifier;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -28,6 +29,9 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        AbstractClassifier atmosphereClassifier = new Maori().getClassifier("barometer-model.model");
+        Log.i("maori-sample-app", "Fetched classifier " + atmosphereClassifier.getClass().toString());
     }
 
     public void evaluateLocalModel() {
