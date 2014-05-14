@@ -10,6 +10,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
@@ -34,11 +35,16 @@ public class Maori {
 
         Model modelDb = this.allModels.getActive(modelName);
 
-        Object model;
+        Object model = null;
         Log.d(TAG, "Deserializing model");
+        Log.d(TAG, "Model : " + modelDb);
+
         try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(modelDb.getPayload()));
+            ObjectInputStream objectInputStream = new ObjectInputStream(
+                    new ByteArrayInputStream(modelDb.getPayload()));
+
             model = objectInputStream.readObject();
+            objectInputStream.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {

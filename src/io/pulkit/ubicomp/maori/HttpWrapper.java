@@ -1,10 +1,13 @@
 package io.pulkit.ubicomp.maori;
 
+import android.util.Base64;
+import android.util.Log;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,14 +19,19 @@ import java.io.InputStreamReader;
  */
 public class HttpWrapper {
 
+    private static final String TAG = "maori:HttpWrapper";
+
     byte[] fetchResultBytes(String url) {
-        byte[] byteArray;
-        HttpResponse httpResponse;
+        Log.d(TAG, "Fetching result for url - " + url);
+
+        byte[] byteArray = null;
         HttpClient httpClient = new DefaultHttpClient();
+        String result;
 
         try {
-            httpResponse = httpClient.execute(new HttpGet(url));
-            byteArray = EntityUtils.toByteArray(httpResponse.getEntity());
+            result = httpClient.execute(new HttpGet(url), new BasicResponseHandler());
+            byteArray = Base64.decode(result.getBytes(), Base64.DEFAULT);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

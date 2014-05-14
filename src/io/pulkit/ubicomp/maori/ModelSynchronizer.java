@@ -25,7 +25,9 @@ public class ModelSynchronizer {
 
     public void synchronize() {
         List<ModelInfo> clientModelInfoList = allModels.getModelInfo();
+        Log.d(TAG, "Client model size : " + clientModelInfoList.size());
         HashMap<ModelInfo, ModelInfo> serverModelInfoMap = fetchModelInfoMap();
+        Log.d(TAG, "Server model size : " + serverModelInfoMap.keySet().size());
 
         for (ModelInfo clientModelInfo : clientModelInfoList) {
             ModelInfo serverModelInfo = serverModelInfoMap.get(clientModelInfo);
@@ -42,6 +44,7 @@ public class ModelSynchronizer {
             serverModelInfoMap.remove(serverModelInfo);
         }
 
+        Log.d(TAG, "Downloading models (size) : " + serverModelInfoMap.keySet().size());
         for (ModelInfo newModelInfo : serverModelInfoMap.keySet()) {
             fetchAndInsertModel(newModelInfo);
         }
@@ -51,7 +54,7 @@ public class ModelSynchronizer {
         Log.d(TAG, "Downloading model " + newModelInfo);
 
         byte[] modelBites = new HttpWrapper().fetchResultBytes(String.format(
-                "http://%s/maori-server/model/get?modelId=%s&version=%s",
+                "http://%s/maori-server/model/get?model=%s&version=%s",
                 hostName, newModelInfo.getName(), newModelInfo.getVersion()));
 
         allModels.add(new Model(newModelInfo.getName(), newModelInfo.getVersion(), newModelInfo.isActive(), modelBites));
