@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class ModelSynchronizer {
 
-    private static final String TAG = "ModelSynchronizer";
+    private static final String TAG = "maori:ModelSynchronizer:";
+    private static final String hostName = "10.0.0.5:9979";
     private AllModels allModels;
 
     public ModelSynchronizer(Context context) {
@@ -51,7 +52,7 @@ public class ModelSynchronizer {
 
         byte[] modelBites = new HttpWrapper().fetchResultBytes(String.format(
                 "http://%s/maori-server/model/get?modelId=%s&version=%s",
-                "128.237.200.224:9979", newModelInfo.getName(), newModelInfo.getVersion()));
+                hostName, newModelInfo.getName(), newModelInfo.getVersion()));
 
         allModels.add(new Model(newModelInfo.getName(), newModelInfo.getVersion(), newModelInfo.isActive(), modelBites));
     }
@@ -59,7 +60,7 @@ public class ModelSynchronizer {
     private HashMap<ModelInfo, ModelInfo> fetchModelInfoMap() {
         Log.d(TAG, "Fetching Model Info");
 
-        String url = String.format("http://%s/maori-server/model/info?deviceId=", "128.237.200.224:9979", "device1");
+        String url = String.format("http://%s/maori-server/model/info?deviceId=", hostName, "device1");
         String jsonResult = new HttpWrapper().fetchResultString(url);
 
         HashMap<ModelInfo, ModelInfo> modelInfoMap = new HashMap<ModelInfo, ModelInfo>();

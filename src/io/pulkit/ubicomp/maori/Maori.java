@@ -19,7 +19,7 @@ import weka.classifiers.AbstractClassifier;
 
 public class Maori {
 
-    private final String TAG = "Maori";
+    private final String TAG = "maori";
 
     private ModelSynchronizer modelSynchronizer;
     private AllModels allModels;
@@ -53,6 +53,8 @@ public class Maori {
     }
 
     public void refresh() {
+        Log.i(TAG, "Refreshing model cache");
+
         this.modelSynchronizer.synchronize();
     }
 

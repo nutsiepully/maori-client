@@ -4,12 +4,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllModels {
 
+    private static final String TAG = "maori:AllModels";
     private DatabaseHelper databaseHelper;
 
     public AllModels(Context context) {
@@ -17,10 +19,12 @@ public class AllModels {
     }
 
     public void add(Model model) {
+        Log.d(TAG, "Adding new model to DB: " + model);
+
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", model.getName());
         contentValues.put("version", model.getVersion());
-        contentValues.put("current", model.isActive());
+        contentValues.put("active", model.isActive());
         contentValues.put("payload", model.getPayload());
 
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
@@ -29,11 +33,14 @@ public class AllModels {
     }
 
     public Model getActive(String name) {
+        Log.d(TAG, "Fetching active model: " + name);
+
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(
-                "select * from models where name = ? and current = true", new String[]{name});
+                "select id, name, version, active, payload from models where name = ? and active = 1", new String[]{name});
 
-        if (cursor == null) throw new ModelNotFoundException(name);
+        if (cursor == null || cursor.getCount() < 1 ) throw new ModelNotFoundException(name);
+
         cursor.moveToFirst();
 
         Model model = new Model(cursor.getInt(0), cursor.getString(1), cursor.getString(2),
@@ -44,6 +51,8 @@ public class AllModels {
     }
 
     public List<ModelInfo> getModelInfo() {
+        Log.d(TAG, "Getting model info");
+
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select name, version, active from models", null);
 
@@ -62,11 +71,16 @@ public class AllModels {
     }
 
     public void delete(String name, String version) {
+        Log.d(TAG, "Deleting model: " + name + ", " + version);
+
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
         db.delete("models", "name = ? and version = ?", new String[]{name, version});
     }
 
     public void updateActiveState(String name, String version, boolean active) {
+        Log.d(TAG, "Updating model state: " + name + ", " + version + ", " + active);
+
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();

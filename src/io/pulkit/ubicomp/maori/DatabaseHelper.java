@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 3;
     private static final String DB_NAME = "maori.db";
 
     public DatabaseHelper(Context context) {
@@ -17,11 +17,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String dbString =
             "CREATE TABLE models ( " +
-                "id integer primary key autoincrement," +
-                "name varchar(30)" +
-                "version int" +
-                "current int" +
-                "payload blob" +
+                "id integer primary key autoincrement, " +
+                "name varchar(30), " +
+                "version int, " +
+                "active int, " +
+                "payload blob " +
             ");";
 
         db.execSQL(dbString);

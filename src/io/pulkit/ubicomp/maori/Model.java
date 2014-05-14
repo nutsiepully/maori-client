@@ -42,4 +42,14 @@ public class Model {
     public byte[] getPayload() {
         return payload;
     }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                " name='" + name + '\'' +
+                ", version='" + version + '\'' +
+                ", active=" + active +
+                ", id=" + id +
+                '}';
+    }
 }
