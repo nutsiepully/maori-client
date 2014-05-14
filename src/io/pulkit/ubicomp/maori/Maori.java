@@ -1,5 +1,6 @@
 package io.pulkit.ubicomp.maori;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.apache.http.client.HttpClient;
@@ -7,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.OptionalDataException;
@@ -19,45 +21,39 @@ public class Maori {
 
     private final String TAG = "Maori";
 
-    public Object getModel(String modelName) {
+    private ModelSynchronizer modelSynchronizer;
+    private AllModels allModels;
+
+    public Maori(Context context) {
+        this.modelSynchronizer = new ModelSynchronizer(context);
+        this.allModels = new AllModels(context);
+    }
+
+    private Object getModel(String modelName) {
         Log.i(TAG, "Fetching classifier " + modelName);
 
-        HttpClient httpClient = new DefaultHttpClient();
-        String result;
-        Log.d(TAG, "Downloading model");
-        try {
-            // TODO: extract IP to configuration.
-            result = httpClient.execute(new HttpGet(
-                            "http://128.237.200.224:9979/maori-server/model/get?modelId=" + modelName),
-                    new BasicResponseHandler());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Model modelDb = this.allModels.getActive(modelName);
 
-        ObjectInputStream ois = null;
         Object model;
         Log.d(TAG, "Deserializing model");
         try {
-            ois = new ObjectInputStream(new StringBufferInputStream(result));
-            model = ois.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (OptionalDataException e) {
-            throw new RuntimeException(e);
-        } catch (StreamCorruptedException e) {
-            throw new RuntimeException(e);
+            ObjectInputStream objectInputStream = new ObjectInputStream(new ByteArrayInputStream(modelDb.getPayload()));
+            model = objectInputStream.readObject();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
         return model;
     }
 
-    public <T> T getModelT(String modelName) {
-        throw new RuntimeException();
-    }
-
     public AbstractClassifier getClassifier(String modelName) {
         return (AbstractClassifier)getModel(modelName);
     }
+
+    public void refresh() {
+        this.modelSynchronizer.synchronize();
+    }
+
 }
