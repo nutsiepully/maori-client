@@ -16,6 +16,7 @@ import java.util.List;
 public class ModelSynchronizer {
 
     private static final String TAG = "maori:ModelSynchronizer:";
+    // TODO: Remove hard coded server address
     private static final String hostName = "10.0.0.5:9979";
     private AllModels allModels;
 
@@ -54,7 +55,7 @@ public class ModelSynchronizer {
         Log.d(TAG, "Downloading model " + newModelInfo);
 
         byte[] modelBites = new HttpWrapper().fetchResultBytes(String.format(
-                "http://%s/maori-server/model/get?model=%s&version=%s",
+                "http://%s/maori-server/model?name=%s&version=%s",
                 hostName, newModelInfo.getName(), newModelInfo.getVersion()));
 
         allModels.add(new Model(newModelInfo.getName(), newModelInfo.getVersion(), newModelInfo.isActive(), modelBites));
@@ -63,6 +64,7 @@ public class ModelSynchronizer {
     private HashMap<ModelInfo, ModelInfo> fetchModelInfoMap() {
         Log.d(TAG, "Fetching Model Info");
 
+        // TODO: Remove hard coded device id
         String url = String.format("http://%s/maori-server/model/info?deviceId=", hostName, "device1");
         String jsonResult = new HttpWrapper().fetchResultString(url);
 
